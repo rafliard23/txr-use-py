@@ -293,7 +293,7 @@ class vehicle_upgrade_tab(ctk.CTkFrame):
                                                      variable=self.option_var)
                 self.option_menu.grid(row=i, column=1, padx=10, pady=(5,0), sticky="e")
             
-            elif i in {3, 4, 5, 6, 8, 9}:
+            elif i in {3, 4, 5, 6, 7, 8}:
                 # Most of Handling
                 self.option_var = ctk.StringVar(value=utils.constants.LEVEL_STRINGS[data[i]])
                 self.option_menu = ctk.CTkOptionMenu(self, width=160,
@@ -301,7 +301,7 @@ class vehicle_upgrade_tab(ctk.CTkFrame):
                                                      variable=self.option_var)
                 self.option_menu.grid(row=i, column=1, padx=10, pady=(5,0), sticky="e")
             
-            elif i in {7, 10}:
+            elif i in {9, 10}:
                 # LSD and Nitro
                 self.option_var = ctk.StringVar(value=utils.constants.LEVEL_STRINGS[data[i]])
                 self.option_menu = ctk.CTkOptionMenu(self, width=160,
