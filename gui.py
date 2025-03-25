@@ -1,11 +1,3 @@
-# https://stackoverflow.com/questions/62348794/how-do-you-create-hotkeys-like-ctrls-with-tkinter
-# TO-DO:
-# > Benerin cara cek apply (cek udh neken last selected apa ngga)
-# > Cek applied JSON nya apakah nabrak antara data player sama data upgrade mobil
-# https://stackoverflow.com/questions/110923/how-do-i-close-a-tkinter-window
-
-# import tkinter as tk
-# from tkinter import ttk
 import customtkinter as ctk
 from tkinter import messagebox
 import utils.constants
@@ -49,10 +41,15 @@ class control_section(ctk.CTkFrame):
             self.open_act_vehicle_list_handler()
             self.open_act_player_stats_handler()
         else:
-            pass    
+            pass
+        utils.io.load_json()
+        self.open_act_player_data_handler()
+        self.open_act_vehicle_list_handler()
+        self.open_act_player_stats_handler()    
 
     def button_save_callback(self, event=None):
         if (self.save_dir):
+            self.button_apply_callback()
             utils.io.json_to_sav(self.save_dir)
             messagebox.showinfo("Save Complete", "All changes has been saved!")
         else:
@@ -62,6 +59,7 @@ class control_section(ctk.CTkFrame):
         saveas_dir = utils.io.set_saveas_file()
         # proceed to convert the json to sav if path exist
         if (saveas_dir):
+            self.button_apply_callback()
             utils.io.json_to_sav(saveas_dir)
             messagebox.showinfo("Save Complete", "All changes has been saved!")
         else:
@@ -72,17 +70,13 @@ class control_section(ctk.CTkFrame):
         data = self.player_data.get_entry_player_data()
         org_data = self.player_data.get_org_player_data()
         utils.io.set_player_data(data, org_data)
-        # We refresh the tmp data after writing with player data
-        utils.io.load_json()
+    
         # Afterward we save the vehicle upgrade
-        data = self.vehicle_upgrades.get_optionMenu_edit()
         id = self.vehicle_list.get_last_selected_id()
+        data = self.vehicle_upgrades.get_optionMenu_edit(id)
         utils.io.set_vehicle_upgrade(data, id)
         # Now we refresh player stats
         self.open_act_player_stats_handler()
-
-    def get_selected_tab(master):
-        return master.tab_view.get()
 
     # Wrapper for Player Data (tabbed) main task displayer
     def open_act_player_data_handler(self):
@@ -160,9 +154,14 @@ class player_data_tab(ctk.CTkFrame):
 
     def get_entry_player_data(self):
         value = []
+
+        # This one handy for checking whether it's empty or not for later
+        checker = 0
         for i, entry in enumerate(self.entries):
             value.append(entry.get())
-        
+            checker += value[i].__sizeof__()
+
+        value.append(checker)
         return value
     
     def get_org_player_data(self):
@@ -237,7 +236,11 @@ class vehicle_list_tab(ctk.CTkScrollableFrame):
     
     # Getter for selected car id only!
     def get_last_selected_id(self):
-        return self.last_car_id
+        try:
+            self.last_car_id
+        except AttributeError:
+            self.last_car_id = 0      # We print 0 to identify that we haven't selected the car
+        return self.last_car_id    
 
 class vehicle_upgrade_tab(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -260,13 +263,15 @@ class vehicle_upgrade_tab(ctk.CTkFrame):
         self.set_vehicle_upgrades(data)
     
     # Getter for current OptionMenu values
-    def get_optionMenu_edit(self):
-        data = []
-        # We get the levels var to get each OptionMenu values
-        for i, option_menu in enumerate(self.levels):
-            value = option_menu.get()
-            data.append(value)
-        return data
+    def get_optionMenu_edit(self, id):
+        # First we check whether user has selected car or not
+        if (id != 0):
+            data = []
+            # We get the levels var to get each OptionMenu values
+            for i, option_menu in enumerate(self.levels):
+                value = option_menu.get()
+                data.append(value)
+            return data
 
     # This method used for displaying to GUI element
     def set_vehicle_upgrades(self, data):
@@ -275,8 +280,7 @@ class vehicle_upgrade_tab(ctk.CTkFrame):
             self.label = ctk.CTkLabel(self, text=field)
             self.label.grid(row=i, column=0, padx=10, pady=5, sticky="w")
 
-            # Dynamically set the value based off data from JSON; need several
-            # ifs
+        # Dynamically set the value based off data from JSON; need several ifs
             if i == 0:
                 # Engine PU
                 self.option_var = ctk.StringVar(value=utils.constants.LEVEL_STRINGS[data[i]])
