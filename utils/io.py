@@ -159,11 +159,11 @@ def get_selected_car_upgrades(id):
 
 def set_player_data(data, org_data):
     global json_data
-    empty = False
-    
+
     # Check whether we have data or not
-    processed = []
-    if ((data.__sizeof__()) != 88):
+    if (data[6] != 294):    # As I said earlier, it's handy
+        processed = []
+
         # If from data is empty, we print back the placeholder data
         for i in range(6):
             # We check it first, if it's empty, we give org data
@@ -177,12 +177,9 @@ def set_player_data(data, org_data):
                     continue # Move to next iteration
                 conversion = int(data[i])
                 processed.append(conversion)
-    else:
-        processed = org_data
-        empty = True
-
+    
     # Now we check if we truly have empty entries back in player_data tab
-    if (empty != True):
+    if (data[6] != 294):
         player_data = (
             json_data.get("root", {})
             .get("properties", {})
@@ -201,69 +198,74 @@ def set_player_data(data, org_data):
         with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
             json.dump(json_data, file, indent=2, separators=(",",":"))
 
-    del processed, org_data, empty
+        load_json()
+
+    del processed, data, org_data
 
 def set_vehicle_upgrade(data, id):
     global json_data
 
-    org_data = get_selected_car_upgrades(id)
-    
-    processed = []
+    if (id != 0):
+        org_data = get_selected_car_upgrades(id)
 
-    # Refactoring here
-    for i in range(13):
-        # We process rear tires from front tires data
-        if (i == 9):
-            converted = processed[i-1]
-            processed.append(converted)
-            continue
-        # Several ifs, we going to shift the remaining stuffs
-        if i in {10, 11}:
-            converted = constants.LEVEL_RAW_STRINGS[constants.LEVEL_STRINGS.index(data[i-1])]
-            processed.append(converted)
-            continue
-        # We process car' mileage here
-        if (i == 12):
-            # If we spot the entry are empty/isn't filled by user
-            if (data[i-1].__sizeof__() == 49):
-                processed.append(org_data[11])
-                continue
-            elif (data[i-1].__sizeof__() > 49):
-                converted = float(data[i-1])
+        processed = []
+
+        # Refactoring here
+        for i in range(13):
+            # We process rear tires from front tires data
+            if (i == 9):
+                converted = processed[i-1]
                 processed.append(converted)
                 continue
+            # Several ifs, we going to shift the remaining stuffs
+            if i in {10, 11}:
+                converted = constants.LEVEL_RAW_STRINGS[constants.LEVEL_STRINGS.index(data[i-1])]
+                processed.append(converted)
+                continue
+            # We process car' mileage here
+            if (i == 12):
+                # If we spot the entry are empty/isn't filled by user
+                if (data[i-1].__sizeof__() == 49):
+                    processed.append(org_data[11])
+                    continue
+                elif (data[i-1].__sizeof__() > 49):
+                    converted = float(data[i-1])
+                    processed.append(converted)
+                    continue
 
-        # 0-9 data
-        converted = constants.LEVEL_RAW_STRINGS[constants.LEVEL_STRINGS.index(data[i])]
-        processed.append(converted)
-    
-    my_cars = (
-        json_data.get("root", {})
-        .get("properties", {})
-        .get("user_info_0", {})
-        .get("Struct", {})
-        .get("Struct", {})
-        .get("MyCars_0", {})
-        .get("Map", [])
-    )
-    
-    # finding our selected car based on passsed id arg
-    current_car = next((car for car in my_cars if car["key"]["Int"] == id), None)
-    # tunes = current_car["value"]["Struct"]["Struct"]["TuneInfos_0"]["Map"]
-    for tunes in current_car["value"]["Struct"]["Struct"]["TuneInfos_0"]["Map"]:
-        # we collect each upgrades level, and append them as list
-        for i, value in enumerate(constants.UPGRADES_RAW_STRINGS, start=0):
-            if tunes["key"]["Enum"] == constants.UPGRADES_RAW_STRINGS[i]:
-                tunes["value"]["Struct"]["Struct"]["EquipLevel_0"]["Enum"] = processed[i]
-    
-    
-    current_car["value"]["Struct"]["Struct"]["Mileages_0"]["Double"] = processed[12]
+            # 0-9 data
+            converted = constants.LEVEL_RAW_STRINGS[constants.LEVEL_STRINGS.index(data[i])]
+            processed.append(converted)
 
-    with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
-            json.dump(json_data, file, indent=2, separators=(",",":"))
-    
-    # Just freeing memory
-    del processed, converted, org_data, i
+        my_cars = (
+            json_data.get("root", {})
+            .get("properties", {})
+            .get("user_info_0", {})
+            .get("Struct", {})
+            .get("Struct", {})
+            .get("MyCars_0", {})
+            .get("Map", [])
+        )
+
+        # finding our selected car based on passsed id arg
+        current_car = next((car for car in my_cars if car["key"]["Int"] == id), None)
+        # tunes = current_car["value"]["Struct"]["Struct"]["TuneInfos_0"]["Map"]
+        for tunes in current_car["value"]["Struct"]["Struct"]["TuneInfos_0"]["Map"]:
+            # we collect each upgrades level, and append them as list
+            for i, value in enumerate(constants.UPGRADES_RAW_STRINGS, start=0):
+                if tunes["key"]["Enum"] == constants.UPGRADES_RAW_STRINGS[i]:
+                    tunes["value"]["Struct"]["Struct"]["EquipLevel_0"]["Enum"] = processed[i]
+
+
+        current_car["value"]["Struct"]["Struct"]["Mileages_0"]["Double"] = processed[12]
+
+        with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
+                json.dump(json_data, file, indent=2, separators=(",",":"))
+
+        load_json()
+
+        # Just freeing memory
+        del processed, converted, org_data, i
 
 # --- Data Setter ends here  --- #
 # ----- uesave-cli processes here ----- #
