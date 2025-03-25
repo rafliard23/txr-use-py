@@ -24,7 +24,7 @@ This save game editor lets you edit several parts of user' data that contained i
 
 ### Player Stats Edit
 While in theory you can almost edit any value that exposed in UserData_00.sav, I limited (vars that can be edited) to several vars to encourage players play the game as intended. Variables that included in my Save Editor are the following:
-- Max Money (May not work, as the Wallet Perk effect may kick in randomly)
+- Max Money (Working, the displayed value on player garage shows your current Wallet perk value, just ignore it)
 - Money (CP)
 - BP Point
 - Player' total mileage
