@@ -1,4 +1,4 @@
-VERSION = "0.9-beta"
+VERSION = "1.0.0"
 MAIN_AUTHOR = "rafli.ard23"
 
 TMP_PATH = "./bin/tmp/tmp.json"
