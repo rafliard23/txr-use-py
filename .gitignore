@@ -1,1 +1,9 @@
-/txr_use/*
+# Exclude folders
+
+dist/
+bin/
+gui/**
+txr_use/**
+notes/**
+utils/__pycache__/**
+**.drawio
