@@ -1,6 +1,6 @@
 # Tokyo Xtreme Racer - Save Editor
 
-<img src="https://raw.githubusercontent.com/rafliard23/txr-use-py/refs/heads/main/img/txr_use-main_banner.png"  height="650">
+<img src="https://raw.githubusercontent.com/rafliard23/txr-use-py/refs/heads/main/img/txr_use-main_banner.png">
 
 Yet, another Save Game editor for Tokyo Xtreme Racer.
 
