@@ -246,7 +246,6 @@ def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
         org_data = get_selected_car_upgrades(id)
 
         processed = []
-
         # Refactoring here, range max = i - 1
         for i in range(1, 13):
             # We will append everything as intended
@@ -256,8 +255,12 @@ def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
         # We check whether it is empty or not
         if (data[0]):
             processed.append(data[0])   # Add chassis code
+        else:
+            processed.append('')   # Placeholder, duh
         if (data[13]):
-            processed.append(data[13])  # Add mileage
+            processed.append(float(data[13]))  # Add mileage
+        else:
+            processed.append('')   # Placeholder, duh
 
         my_cars = (
             json_data.get("root", {})
