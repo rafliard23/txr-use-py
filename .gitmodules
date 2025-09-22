@@ -1,6 +1,0 @@
-[submodule "wiki"]
-	path = wiki
-	url = https://github.com/rafliard23/txr-use-py.wiki.git
-[submodule "txr-use-py.wiki"]
-	path = txr-use-py.wiki
-	url = https://github.com/rafliard23/txr-use-py.wiki.git
