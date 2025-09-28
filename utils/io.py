@@ -125,10 +125,11 @@ def get_player_car_count() -> int:
             .get("Struct", {})
             .get("Struct", {})
             .get("MyCarIdSrc_0", {})
-            .get("Int", {})
         )
+    
+    id = counter_data["Int"]
 
-    return counter_data
+    return id
 
 # Fetch player stats from JSON
 def get_player_data(DATA_FLAG) -> list:
@@ -255,6 +256,26 @@ def set_player_data(data: list[str]) -> None:
 
         del processed, data, conversion
 
+# Increment player ar counter
+def increment_player_car_count(id: int) -> int:
+    id = id + 1 
+    global json_data
+
+    counter_data = (
+            json_data.get("root", {})
+            .get("properties", {})
+            .get("user_info_0", {})
+            .get("Struct", {})
+            .get("Struct", {})
+            .get("MyCarIdSrc_0", {})
+        )
+    
+    counter_data["Int"] = id
+    with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
+        json.dump(json_data, file, indent=2, separators=(",",":"))
+
+    return id
+
 def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
     global json_data
 
@@ -332,6 +353,32 @@ def rm_vehicle(id) -> None:
         
         with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
             json.dump(json_data, file, indent=2, separators=(",",":"))
+
+def add_vehicles(id: str, chassis: str) -> None:
+    global json_data
+
+    temp_car = constants.PLC_TEMPLATE
+
+    temp_car["key"]["Int"] = id
+    temp_car["value"]["Struct"]["Struct"]["CarNameId_0"]["Name"] = chassis
+    temp_car["value"]["Struct"]["Struct"]["EngineNameId_0"]["Name"] = chassis
+
+    my_cars = (
+        json_data.get("root", {})
+        .get("properties", {})
+        .get("user_info_0", {})
+        .get("Struct", {})
+        .get("Struct", {})
+        .get("MyCars_0", {})
+        .get("Map", [])
+    )
+
+    my_cars.append(temp_car)
+
+    with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
+        json.dump(json_data, file, indent=2, separators=(",",":"))
+    
+    load_json()
 
 # --- Data Setter ends here  --- #
 # --- Helper data getter/setter here  --- #
