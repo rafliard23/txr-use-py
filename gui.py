@@ -37,7 +37,17 @@ class control_section(ctk.CTkFrame):
                                           command=self.button_apply_callback)
         self.button_apply.grid(row=3, column=0,
                                padx=20, pady=(0, 20), sticky="ew")
-
+        
+        # Flexible buttons
+        self.button_rm_car = ctk.CTkButton(self, text="Remove Car",
+                                           command=self.button_rm_car_callback)
+        self.button_add_car = ctk.CTkButton(self, text="Add Car",
+                                            command=self.button_add_car_callback)
+        self.button_export_prst = ctk.CTkButton(self, text="Export Preset")
+        self.button_import_prst = ctk.CTkButton(self, text="Import Preset")
+        
+        # End of buttons
+        
         self.version_label = ctk.CTkLabel(self,
                                           text=f"Ver. {utils.constants.VERSION}",
                                           fg_color="transparent",
@@ -103,6 +113,22 @@ class control_section(ctk.CTkFrame):
         # Now we refresh player stats
         self.open_act_player_stats_handler()
 
+    def button_rm_car_callback (self) -> None:
+        last_data = self.vehicle_list.get_last_selected_vehicle()
+        ret = messagebox.askyesno(f"Delete #{last_data[0]} {last_data[1]}",
+                            f"Are you sure to delete #{last_data[0]} {last_data[1]}?")
+        if ret:
+            utils.io.rm_vehicle(last_data[0])
+            self.open_act_vehicle_list_handler()
+            messagebox.showinfo("Car removed!", f"Car #{last_data[0]} {last_data[1]} has been removed")
+
+    def button_add_car_callback (self) -> None:
+        count = utils.io.get_player_car_count()
+        messagebox.showinfo("Test!", f"How many cars #{count}")
+        # last_data = self.vehicle_list.get_last_selected_vehicle()
+        # utils.io.rm_vehicle(last_data[0])
+        # messagebox.showinfo("Car removed!", "Car #{last_data[0]} {last_data[1]} has been removed")
+
     # ----- Wrapper and Misc methods here ----- #
     # Wrapper for Player Data (tabbed) main task displayer
     def open_act_player_data_handler(self) -> None:
@@ -128,6 +154,10 @@ class control_section(ctk.CTkFrame):
         utils.utils.ToolTip(self.button_save, "(S)ave current file (CTRL+S)")
         utils.utils.ToolTip(self.button_saveas, "Save current file as... (CTRL+Shift+S)")
         utils.utils.ToolTip(self.button_apply, "Apply current edit")
+        utils.utils.ToolTip(self.button_rm_car, "Remove selected car from garage")
+        utils.utils.ToolTip(self.button_add_car, "Add car into garage")
+        utils.utils.ToolTip(self.button_export_prst, "Export car preset as file")
+        utils.utils.ToolTip(self.button_import_prst, "Import car preset file")
 
     # Method handler for showing last selected
     def show_last_selected(self) -> None:
@@ -158,6 +188,27 @@ class control_section(ctk.CTkFrame):
                                            text_color_disabled="white")
         self.button_action.grid(row=7, column=0, padx=20, pady=(10, 20), sticky="sew")
         self.first_run = False
+
+    # Wrapper caller from main
+    def show_car_rm_add(self) -> None:
+        self.button_rm_car.grid(row=4, column=0,
+                       padx=20, pady=(10, 20), sticky="ew")
+        self.button_add_car.grid(row=5, column=0,
+                       padx=20, pady=(0, 20), sticky="ew")
+        
+    def hide_car_rm_add(self) -> None:
+        self.button_rm_car.grid_forget()
+        self.button_add_car.grid_forget()
+        
+    def show_preset_io(self) -> None:
+        self.button_export_prst.grid(row=4, column=0,
+                       padx=20, pady=(10, 20), sticky="ew")
+        self.button_import_prst.grid(row=5, column=0,
+                       padx=20, pady=(0, 20), sticky="ew")
+    
+    def hide_preset_io(self) -> None:
+        self.button_export_prst.grid_forget()
+        self.button_import_prst.grid_forget()
 
 class tabs_section(ctk.CTkFrame):
     def __init__(self, master, **kwargs) -> None:
@@ -472,7 +523,7 @@ class App(ctk.CTk):
         self.grid_columnconfigure(2, weight=1)
 
         # create TabView
-        self.tab_view = ctk.CTkTabview(self)
+        self.tab_view = ctk.CTkTabview(self, command=self.on_tab_change)
         self.tab_view.grid(row=0, rowspan=4, column=1, padx=10,
                            pady=(5,10), sticky="nsew")
         
@@ -537,6 +588,18 @@ class App(ctk.CTk):
         # CTRL + O; for Open
         self.bind('<Control-o>', self.control_frame.button_open_callback)
         self.bind('<Control-O>', self.control_frame.button_open_callback)
+
+    def on_tab_change(self):
+        current_tab = self.tab_view.get()
+        if current_tab == "Vehicles List":
+            self.control_frame.hide_preset_io()
+            self.control_frame.show_car_rm_add()
+        if current_tab == "Vehicle Upgrades":
+            self.control_frame.hide_car_rm_add()
+            self.control_frame.show_preset_io()
+        if current_tab == "Player Data":
+            self.control_frame.hide_car_rm_add()
+            self.control_frame.hide_preset_io()
 
 app = App()
 app.mainloop()
