@@ -123,11 +123,15 @@ class control_section(ctk.CTkFrame):
             messagebox.showinfo("Car removed!", f"Car #{last_data[0]} {last_data[1]} has been removed")
 
     def button_add_car_callback (self) -> None:
-        count = utils.io.get_player_car_count()
-        messagebox.showinfo("Test!", f"How many cars #{count}")
-        # last_data = self.vehicle_list.get_last_selected_vehicle()
-        # utils.io.rm_vehicle(last_data[0])
-        # messagebox.showinfo("Car removed!", "Car #{last_data[0]} {last_data[1]} has been removed")
+        chassis = ctk.CTkInputDialog(text="Enter desired car chassis:", title="Input Car Chassis")
+        chassis = chassis.get_input()
+        if chassis:
+            count = utils.io.get_player_car_count()
+            count = utils.io.increment_player_car_count(count)
+            utils.io.add_vehicles(count, chassis)
+            self.open_act_vehicle_list_handler()
+            messagebox.showinfo("New Car",
+                                "New car has been aded to your garage!")
 
     # ----- Wrapper and Misc methods here ----- #
     # Wrapper for Player Data (tabbed) main task displayer
