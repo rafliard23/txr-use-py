@@ -371,6 +371,18 @@ def check_is_player_data_complete() -> None:
     if "MaxWiningStreak_0" not in player_data:
         player_data.update(constants.PLJ_WIN_STRK)
         is_write = True
+
+    if "TotalMileages_0" not in player_data:
+        player_data.update(constants.PLJ_SUM_MILE)
+        is_write = True
+
+    if "CumulativeAcquisitionCP_0" not in player_data:
+        player_data.update(constants.PLJ_SUM_CP)
+        is_write = True
+
+    if "Day_0" not in player_data:
+        player_data.update(constants.PLJ_DAY)
+        is_write = True
     
     if is_write:
         with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
