@@ -57,71 +57,28 @@ SET_WRITE_PLAYER_KEY = [
 
 # ----- JSON Player Data Template ----- #
 
-PLJ_CP = {
-    "Cp_0": {
-        "tag": {
-          "data": {
-            "Other": "Int64Property"
-          }
-        },
-        "Int64": 0
-    }
-}
+PLJ_CP = {"Cp_0":{"tag":{"data":{"Other":"Int64Property"}},"Int64":0}}
 
-PLJ_PP = {
-    "PP_0": {
-        "tag": {
-          "data": {
-            "Other": "IntProperty"
-          }
-        },
-        "Int": 0
-    }
-}
+PLJ_PP = {"PP_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0}}
 
-PLJ_WIN = {
-    "WinNum_0": {
-        "tag": {
-          "data": {
-            "Other": "IntProperty"
-          }
-        },
-        "Int": 0
-    }
-}
+PLJ_WIN = {"WinNum_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0}}
 
-PLJ_LOSS = {
-    "LoseNum_0": {
-        "tag": {
-          "data": {
-            "Other": "IntProperty"
-          }
-        },
-        "Int": 0
-    }
-}
+PLJ_LOSS = {"LoseNum_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0}}
 
-PLJ_DRAW = {
-    "DrawNum_0": {
-        "tag": {
-          "data": {
-            "Other": "IntProperty"
-          }
-        },
-        "Int": 0
-    }
-}
+PLJ_DRAW = {"DrawNum_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0}}
 
-PLJ_WIN_STRK = {
-    "MaxWiningStreak_0": {
-        "tag": {
-          "data": {
-            "Other": "IntProperty"
-          }
-        },
-        "Int": 0
-    }
-}
+PLJ_WIN_STRK = {"MaxWiningStreak_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0}}
+
+PLJ_SUM_MILE = {"TotalMileages_0":{"tag":{"data":{"Other":"DoubleProperty"}},"Double":0}}
+
+PLJ_SUM_CP = {"CumulativeAcquisitionCP_0":{"tag":{"data":{"Other":"Int64Property"}},"Int64":0}}
+
+PLJ_DAY = {"Day_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0}}
+
+# JSON Player Perk Template
+PLPJ_AURA = {"key":{"Enum":"ESkillTreeType::STT_AURA"},"value":{"Struct":{"Struct":{"Level_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0},"CategoryName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"PerkOncome"},"RowName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"Perk_enable_aura"}}}}}
+
+PLPJ_EG_SWAP = {"key":{"Enum":"ESkillTreeType::STT_ENABLE_ENGINE_REPLACEMENT"},"value":{"Struct":{"Struct":{"Level_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0},"CategoryName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"PerkOncome"},"RowName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"Perk_enable_engine_replacement"}}}}}
 
 # ----- JSON Player Data Template ends here ----- #
 # ----- Strings Const ----- #
