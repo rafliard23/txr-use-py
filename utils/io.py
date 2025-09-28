@@ -34,7 +34,7 @@ def set_default_start_dir() -> None:
 def set_default_backup_dir() -> None:
     global default_start_dir, default_backup_dir
 
-    default_backup_dir = default_start_dir + '/saved/USE_Save_Backup'
+    default_backup_dir = default_start_dir + '/saved/SaveGamesBackup'
     if os.path.exists(default_backup_dir):
         pass
     else:
