@@ -1,5 +1,8 @@
-VERSION = "1.1.1"
-MAIN_AUTHOR = "rafli.ard23"
+VERSION = "1.2.0"
+MAIN_AUTHOR = "Credits: \n\
+trumank⠀\t - uesave-cli \n\
+TomSchimansky \t - CustomTkinter \n\
+rafli.ard23 \t - App creator"
 
 TMP_PATH = "./bin/tmp/tmp.json"
 

@@ -53,12 +53,12 @@ class control_section(ctk.CTkFrame):
                                           fg_color="transparent",
                                           text_color=("black", "white"))
         self.version_label.grid(row=8, column=0,
-                                padx=20, pady=(0, 0), sticky="sew")
+                                padx=20, sticky="sew")
         
-        self.author_info = ctk.CTkLabel(self,
-                                        text=f"by: {utils.constants.MAIN_AUTHOR}")
+        self.author_info = ctk.CTkButton(self, text="Credits",
+                                        command=self.button_credits)
         self.author_info.grid(row=9, column=0,
-                              padx=20, pady=(0, 10), sticky="ews")
+                              padx=20, pady=(0, 20), sticky="ews")
         
         self.append_control_tooltips()
         self.grid_rowconfigure(6, weight=1)
@@ -112,6 +112,9 @@ class control_section(ctk.CTkFrame):
         
         # Now we refresh player stats
         self.open_act_player_stats_handler()
+
+    def button_credits(self) -> None:
+        messagebox.showinfo("Credits", f"{utils.constants.MAIN_AUTHOR}")
 
     def button_rm_car_callback (self) -> None:
         last_data = self.vehicle_list.get_last_selected_vehicle()
@@ -247,12 +250,12 @@ class player_data_tab(ctk.CTkFrame):
                             pady=(5,0), sticky="w")
             
             if i in {0, 1, 2, 8}:
-                self.entry = ctk.CTkEntry(self, width=150,
+                self.entry = ctk.CTkEntry(self, width=200,
                                           placeholder_text=f"{self.player_data[i]:,}")
             else:
-                self.entry = ctk.CTkEntry(self, width=150,
+                self.entry = ctk.CTkEntry(self, width=200,
                                           placeholder_text=self.player_data[i])
-            self.entry.grid(row=i, column=1, padx=10,
+            self.entry.grid(row=i, column=1, padx=(20,0),
                             pady=(5,0), sticky="e")
             
             self.entries.append(self.entry)
@@ -516,7 +519,7 @@ class App(ctk.CTk):
         # Set window attributes
         self.title("Tokyo Xtreme Racer - Save Editor")
         self.iconbitmap('./app.ico')
-        self.geometry(f"{760}x{600}")
+        self.geometry(f"{960}x{720}")
 
         # Bootstrap things
         utils.io.check_tmp_exist()
@@ -527,7 +530,7 @@ class App(ctk.CTk):
         self.grid_columnconfigure(2, weight=1)
 
         # create TabView
-        self.tab_view = ctk.CTkTabview(self, command=self.on_tab_change)
+        self.tab_view = ctk.CTkTabview(self, command=self.on_tab_change, width=360)
         self.tab_view.grid(row=0, rowspan=4, column=1, padx=10,
                            pady=(5,10), sticky="nsew")
         
