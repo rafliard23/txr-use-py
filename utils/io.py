@@ -114,6 +114,22 @@ def get_car_list() -> list[str | int]:
 
     return car_names, car_ids
 
+# Get player current car counter
+def get_player_car_count() -> int:
+    global json_data
+
+    counter_data = (
+            json_data.get("root", {})
+            .get("properties", {})
+            .get("user_info_0", {})
+            .get("Struct", {})
+            .get("Struct", {})
+            .get("MyCarIdSrc_0", {})
+            .get("Int", {})
+        )
+
+    return counter_data
+
 # Fetch player stats from JSON
 def get_player_data(DATA_FLAG) -> list:
     # Navigate to MyCars_0
@@ -294,6 +310,28 @@ def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
         # Just freeing memory
         del processed, converted, org_data, i
 
+def rm_vehicle(id) -> None:
+    global json_data
+
+    if (id != 0):
+        my_cars = (
+            json_data.get("root", {})
+            .get("properties", {})
+            .get("user_info_0", {})
+            .get("Struct", {})
+            .get("Struct", {})
+            .get("MyCars_0", {})
+            .get("Map", [])
+        )
+
+        for i, entry in enumerate(my_cars):
+            if entry.get("key", {}).get("Int") == id:
+                rm = my_cars.pop(i)
+                print("Removed entry:", rm)
+                break
+        
+        with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
+            json.dump(json_data, file, indent=2, separators=(",",":"))
 
 # --- Data Setter ends here  --- #
 # --- Helper data getter/setter here  --- #
