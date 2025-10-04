@@ -468,6 +468,11 @@ class vehicle_upgrade_tab(ctk.CTkFrame):
     def append_veh_up_tooltip(self) -> None:
         utils.utils.ToolTip(self.levels[0], "Vehicle's Chassis Code/ID. Used for body swap.\n"
                                            "Check repository wiki for valid internal IDs/Chassis code.")
+        utils.utils.ToolTip(self.levels[1], "Vehicle's Engine.\n"
+                                           "To revert into original Engine, rename it as None, or same as Chassis code.\n"
+                                           "Check repository wiki for valid Engine code.")
+        utils.utils.ToolTip(self.levels[2], "Vehicle's Aura.\n"
+                                           "Check repository wiki for valid Aura ID.")
         utils.utils.ToolTip(self.levels[15], "Your vehicle mileages.\n"
                                             "Should write the decimal using period/dot (.)")
         
