@@ -404,7 +404,7 @@ class vehicle_upgrade_tab(ctk.CTkFrame):
             # We get the levels var to get each OptionMenu values
             for i, option_menu in enumerate(self.levels):
                 value = option_menu.get()
-                if i == 13: # Input sanitation for mileages
+                if i == 15: # Input sanitation for mileages
                     value = value.replace(',', '')
                 data.append(value)
 
@@ -413,51 +413,52 @@ class vehicle_upgrade_tab(ctk.CTkFrame):
     # This method used for displaying to GUI element
     def set_vehicle_upgrades(self, data) -> None:
         # Loop to create Labels and OptionMenus
+        width=200
         for i, field in enumerate(utils.constants.UPGRADES_STRINGS):
             self.label = ctk.CTkLabel(self, text=field)
             self.label.grid(row=i, column=0, padx=10, pady=5, sticky="w")
 
         # Dynamically set the value based off data from JSON; need several ifs
-            if i == 0:
-                # Chassis code
-                self.option_menu = ctk.CTkEntry(self, width=160, placeholder_text=data[i])
+            if i in range(0,3):
+                # Chassis code, Engine Swap, Aura
+                self.option_menu = ctk.CTkEntry(self, width=width, placeholder_text=data[i])
                 self.option_menu.grid(row=i, column=1, padx=10, pady=(5,0), sticky="e")
 
-            elif i == 1:
+            elif i == 3:
                 # Engine PU
                 self.option_var = ctk.StringVar(value=utils.constants.LEVEL_STRINGS[data[i]])
-                self.option_menu = ctk.CTkOptionMenu(self, width=160,
+                self.option_menu = ctk.CTkOptionMenu(self, width=width,
                                                      values=utils.constants.LEVEL_STRINGS,
                                                      variable=self.option_var)
                 self.option_menu.grid(row=i, column=1, padx=10, pady=(5,0), sticky="e")
             
-            elif i in {2,3}:
+            elif i in {4,5}:
                 # Intake, Exhaust
                 self.option_var = ctk.StringVar(value=utils.constants.LEVEL_STRINGS[data[i]])
-                self.option_menu = ctk.CTkOptionMenu(self, width=160,
+                self.option_menu = ctk.CTkOptionMenu(self, width=width,
                                                      values=utils.constants.LEVEL_EXH_INTK,
                                                      variable=self.option_var)
                 self.option_menu.grid(row=i, column=1, padx=10, pady=(5,0), sticky="e")
             
-            elif i in range(4, 11):
+            elif i in range(6, 13):
                 # Most of Handling
                 self.option_var = ctk.StringVar(value=utils.constants.LEVEL_STRINGS[data[i]])
-                self.option_menu = ctk.CTkOptionMenu(self, width=160,
+                self.option_menu = ctk.CTkOptionMenu(self, width=width,
                                                      values=utils.constants.LEVEL_HANDLINGS,
                                                      variable=self.option_var)
                 self.option_menu.grid(row=i, column=1, padx=10, pady=(5,0), sticky="e")
             
-            elif i in {11, 12}:
+            elif i in {13, 14}:
                 # LSD and Nitro
                 self.option_var = ctk.StringVar(value=utils.constants.LEVEL_STRINGS[data[i]])
-                self.option_menu = ctk.CTkOptionMenu(self, width=160,
+                self.option_menu = ctk.CTkOptionMenu(self, width=width,
                                                      values=utils.constants.LEVEL_MISC,
                                                      variable=self.option_var)
                 self.option_menu.grid(row=i, column=1, padx=10, pady=(5,0), sticky="e")
             
-            elif i == 13:
+            elif i == 15:
                 # Car' mileage entry
-                self.option_menu = ctk.CTkEntry(self, width=160, placeholder_text=data[i])
+                self.option_menu = ctk.CTkEntry(self, width=width, placeholder_text=data[i])
                 self.option_menu.grid(row=i, column=1, padx=10, pady=(5,0), sticky="e")
             
             # Store OptionMenu selections (for later)
@@ -467,7 +468,7 @@ class vehicle_upgrade_tab(ctk.CTkFrame):
     def append_veh_up_tooltip(self) -> None:
         utils.utils.ToolTip(self.levels[0], "Vehicle's Chassis Code/ID. Used for body swap.\n"
                                            "Check repository wiki for valid internal IDs/Chassis code.")
-        utils.utils.ToolTip(self.levels[13], "Your vehicle mileages.\n"
+        utils.utils.ToolTip(self.levels[15], "Your vehicle mileages.\n"
                                             "Should write the decimal using period/dot (.)")
         
 class status_section(ctk.CTkFrame):
@@ -493,7 +494,7 @@ class status_section(ctk.CTkFrame):
         self.grid_columnconfigure(1, weight=1)
 
         for i, value in enumerate(utils.constants.STATUS_STRINGS, start=0):
-            stats = ctk.CTkLabel(self, text=value, fg_color="transparent")
+            stats = ctk.CTkLabel(self, text=value, fg_color="transparent", width=120, anchor="w")
             stats.grid(row=(i+1), column=0, padx=10, sticky="w")
             
             # If conditional for formatting purposes
@@ -519,7 +520,7 @@ class App(ctk.CTk):
         # Set window attributes
         self.title("Tokyo Xtreme Racer - Save Editor")
         self.iconbitmap('./app.ico')
-        self.geometry(f"{960}x{720}")
+        self.geometry(f"{860}x{720}")
 
         # Bootstrap things
         utils.io.check_tmp_exist()
