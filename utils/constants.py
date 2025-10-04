@@ -11,7 +11,8 @@ STATUS_STRINGS = ["Max CP", "CP", "Accumulated CP",
                   "Win Streak", "Total Mileage", 
                   "Day", "Garage Size", "Owned Cars"]
 
-UPGRADES_STRINGS = ["Chassis Code", "Power Unit", "Intake",
+UPGRADES_STRINGS = ["Chassis Code", "Engine Swap", "Aura",
+                    "Power Unit", "Intake",
                     "Exhaust", "Transmission", "Clutch",
                     "Suspension", "Brake", "Body", 
                     "Front Tires", "Rear Tires", "LSD",
@@ -79,9 +80,11 @@ PLJ_SUM_CP = {"CumulativeAcquisitionCP_0":{"tag":{"data":{"Other":"Int64Property
 PLJ_DAY = {"Day_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0}}
 
 # JSON Player Perk Template
+
 PLPJ_AURA = {"key":{"Enum":"ESkillTreeType::STT_AURA"},"value":{"Struct":{"Struct":{"Level_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0},"CategoryName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"PerkOncome"},"RowName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"Perk_enable_aura"}}}}}
 
 PLPJ_EG_SWAP = {"key":{"Enum":"ESkillTreeType::STT_ENABLE_ENGINE_REPLACEMENT"},"value":{"Struct":{"Struct":{"Level_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0},"CategoryName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"PerkOncome"},"RowName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"Perk_enable_engine_replacement"}}}}}
+
 
 # JSON Car Template
 
