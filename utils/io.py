@@ -173,7 +173,6 @@ def get_player_data(DATA_FLAG) -> list:
 
 # Fetch car' equipped upgrades on selected car from vehicle list    
 def get_selected_car_upgrades(id: int) -> list:
-
     if id != 0:
         # Init a variable for storing our level data later
         data = []
@@ -188,14 +187,19 @@ def get_selected_car_upgrades(id: int) -> list:
             .get("Map", [])
         )
 
-        # finding our selected car based on passsed id arg
+        # finding our selected car based on passsed id arg & aliasing
         current_car = next((car for car in my_cars if car["key"]["Int"] == id), None)
+        current_car = current_car["value"]["Struct"]["Struct"]
 
         # We scrape car' chassis code/internal name
-        data.append(current_car["value"]["Struct"]["Struct"]["CarNameId_0"]["Name"])
+        data.append(current_car["CarNameId_0"]["Name"])
+
+        # Engine Swap & Aura
+        data.append(current_car["EngineNameId_0"]["Name"])
+        data.append(current_car["Effect_0"]["Struct"]["Struct"]["AuraNameId_0"]["Name"])
 
         # we collect each upgrades level, and append them as list
-        for tunes in current_car["value"]["Struct"]["Struct"]["TuneInfos_0"]["Map"]:
+        for tunes in current_car["TuneInfos_0"]["Map"]:
             for i, value in enumerate(constants.UPGRADES_RAW_STRINGS, start=0):
                 if tunes["key"]["Enum"] == constants.UPGRADES_RAW_STRINGS[i]:
                     tune = tunes["value"]["Struct"]["Struct"]["EquipLevel_0"]["Enum"]
@@ -203,7 +207,7 @@ def get_selected_car_upgrades(id: int) -> list:
 
                     data.append(tune)
 
-        data.append(round(current_car["value"]["Struct"]["Struct"]["Mileages_0"]["Double"],1))
+        data.append(round(current_car["Mileages_0"]["Double"],1))
 
         return data
 
@@ -284,7 +288,7 @@ def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
 
         processed = []
         # Refactoring here, range max = i - 1
-        for i in range(1, 13):
+        for i in range(3, 15):
             # We will append everything as intended
             converted = constants.LEVEL_RAW_STRINGS[constants.LEVEL_STRINGS.index(data[i])]
             processed.append(converted)
@@ -294,8 +298,19 @@ def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
             processed.append(data[0])   # Add chassis code
         else:
             processed.append('')   # Placeholder, duh
-        if (data[13]):
-            processed.append(float(data[13]))  # Add mileage
+
+        # Engine Swap
+        if (data[1]):
+            processed.append(data[1])
+
+        # We check whether it is empty or not
+        if (data[2]):
+            processed.append(data[2])   # Add Aura
+        else:
+            processed.append('')   # Placeholder, duh
+
+        if (data[15]):
+            processed.append(float(data[15]))  # Add mileage
         else:
             processed.append('')   # Placeholder, duh
 
@@ -311,25 +326,38 @@ def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
         
         # finding our selected car based on passsed id arg
         current_car = next((car for car in my_cars if car["key"]["Int"] == id), None)
-        # tunes = current_car["value"]["Struct"]["Struct"]["TuneInfos_0"]["Map"]
-        for tunes in current_car["value"]["Struct"]["Struct"]["TuneInfos_0"]["Map"]:
+        current_car = current_car["value"]["Struct"]["Struct"]
+
+        for tunes in current_car["TuneInfos_0"]["Map"]:
             # we collect each upgrades level, and append them as list
             for i, value in enumerate(constants.UPGRADES_RAW_STRINGS, start=0):
                 if tunes["key"]["Enum"] == constants.UPGRADES_RAW_STRINGS[i]:
                     tunes["value"]["Struct"]["Struct"]["EquipLevel_0"]["Enum"] = processed[i]
         
         if (data[0]):
-            current_car["value"]["Struct"]["Struct"]["CarNameId_0"]["Name"] = processed[12]
-        if (data[13]):
-            current_car["value"]["Struct"]["Struct"]["Mileages_0"]["Double"] = processed[13]
+            current_car["CarNameId_0"]["Name"] = processed[12]
+        
+        # Engine Swap
+        if (data[1]):
+            current_car["EngineNameId_0"]["Name"] = processed[13]
+            if (processed[13] != None or data[0]):
+                current_car["IsReplacedEngine_0"]["Bool"] = True
+            else:
+                current_car["IsReplacedEngine_0"]["Bool"] = False
 
-        with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
-                json.dump(json_data, file, indent=2, separators=(",",":"))
-        
-        load_json()
-        
-        # Just freeing memory
-        del processed, converted, org_data, i
+        if processed[14]:
+            current_car["Effect_0"]["Struct"]["Struct"]["AuraNameId_0"]["Name"] = processed[14]
+
+        if (data[15]):
+            current_car["Mileages_0"]["Double"] = processed[15]
+
+    with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
+            json.dump(json_data, file, indent=2, separators=(",",":"))
+    
+    load_json()
+    
+    # Just freeing memory
+    del processed, converted, org_data, i
 
 def rm_vehicle(id) -> None:
     global json_data
@@ -348,7 +376,6 @@ def rm_vehicle(id) -> None:
         for i, entry in enumerate(my_cars):
             if entry.get("key", {}).get("Int") == id:
                 rm = my_cars.pop(i)
-                print("Removed entry:", rm)
                 break
         
         with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
