@@ -211,6 +211,57 @@ def get_selected_car_upgrades(id: int) -> list:
 
         return data
 
+def get_vehicle_preset(car: list) -> str:
+    global json_data
+
+    if car[0] != 0:
+        save_path = filedialog.asksaveasfilename(filetypes=[('TXR 25 Car Preset File', '*.sb25_preset'),
+                                                    ('All Files', '*.*')],
+                                                    defaultextension='.sb25_preset',
+                                                    confirmoverwrite=True,
+                                                    initialfile=f"{car[1]}_Untitled")
+    if save_path:
+        selected_car = (
+                json_data.get("root", {})
+                .get("properties", {})
+                .get("user_info_0", {})
+                .get("Struct", {})
+                .get("Struct", {})
+                .get("MyCars_0", {})
+                .get("Map", [])
+            )
+
+        # fix for "next" line, dang it python
+        id = car[0]
+
+        current_car = next((car for car in selected_car if car["key"]["Int"] == id), None)
+        current_car = current_car["value"]["Struct"]["Struct"]
+
+        if current_car:
+            preset = {
+                "Paint_0": current_car["Paint_0"],
+                "BodyStickers_0": current_car["BodyStickers_0"],
+                "RearWingStickers_0": current_car["RearWingStickers_0"],
+                "WindowStickers_0": current_car["WindowStickers_0"],
+                "FrontBrake_0": current_car["FrontBrake_0"],
+                "RearBrake_0": current_car["RearBrake_0"],
+                "FrontTire_0": current_car["FrontTire_0"],
+                "RearTire_0": current_car["RearTire_0"],
+                "FrontWheelInfo_0": current_car["FrontWheelInfo_0"],
+                "RearWheelInfo_0": current_car["RearWheelInfo_0"],
+                "DressUpInfo_0": current_car["DressUpInfo_0"],
+                "TuneInfos_0": current_car["TuneInfos_0"],
+                "EngineNameId_0": current_car["EngineNameId_0"],
+                "IsReplacedEngine_0": current_car["IsReplacedEngine_0"],
+                "SettingInfo_0": current_car["SettingInfo_0"]
+            }
+        
+        
+        with open(save_path, "w", encoding="utf-8") as buffer_data:
+            json.dump(preset, buffer_data, separators=(',', ':'), ensure_ascii=False)
+    
+    return save_path
+
 # --- Data Getter ends here  --- #
 # --- Data Setter starts here  --- #
 
@@ -254,7 +305,7 @@ def set_player_data(data: list[str]) -> None:
                 player_data[key][data_type] = processed[i]
 
         with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
-            json.dump(json_data, file, indent=2, separators=(",",":"))
+            json.dump(json_data, file, indent=2)
 
         load_json()
 
@@ -276,7 +327,7 @@ def increment_player_car_count(id: int) -> int:
     
     counter_data["Int"] = id
     with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
-        json.dump(json_data, file, indent=2, separators=(",",":"))
+        json.dump(json_data, file, indent=2)
 
     return id
 
@@ -352,7 +403,7 @@ def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
             current_car["Mileages_0"]["Double"] = processed[15]
 
     with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
-            json.dump(json_data, file, indent=2, separators=(",",":"))
+            json.dump(json_data, file, indent=2)
     
     load_json()
     
@@ -379,7 +430,7 @@ def rm_vehicle(id) -> None:
                 break
         
         with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
-            json.dump(json_data, file, indent=2, separators=(",",":"))
+            json.dump(json_data, file, indent=2)
 
 def add_vehicles(id: str, chassis: str) -> None:
     global json_data
@@ -403,9 +454,60 @@ def add_vehicles(id: str, chassis: str) -> None:
     my_cars.append(temp_car)
 
     with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
-        json.dump(json_data, file, indent=2, separators=(",",":"))
+        json.dump(json_data, file, indent=2)
     
     load_json()
+
+def set_vehicle_preset(car: list) -> str:
+    global json_data
+
+    # ID refer to our selected car to apply the patch
+    id = car[0]
+
+    # Load preset file
+    car_preset = filedialog.askopenfilename(filetypes=[('TXR 25 Car Preset File', '*.sb25_preset'),
+                                                             ('All Files', '*.*')]).replace("\\","/")
+    
+    if car_preset:
+        # Load preset file
+        with open(car_preset, "r", encoding="utf-8") as preset_data:
+            car_preset = json.load(preset_data)
+    
+        selected_car = (
+                json_data.get("root", {})
+                .get("properties", {})
+                .get("user_info_0", {})
+                .get("Struct", {})
+                .get("Struct", {})
+                .get("MyCars_0", {})
+                .get("Map", [])
+            )
+        
+        current_car = next((car for car in selected_car if car["key"]["Int"] == id), None)
+        current_car = current_car["value"]["Struct"]["Struct"]
+
+        if current_car:
+            current_car["Paint_0"] = car_preset["Paint_0"]
+            current_car["BodyStickers_0"] = car_preset["BodyStickers_0"]
+            current_car["RearWingStickers_0"] = car_preset["RearWingStickers_0"]
+            current_car["WindowStickers_0"] = car_preset["WindowStickers_0"]
+            current_car["FrontBrake_0"] = car_preset["FrontBrake_0"]
+            current_car["RearBrake_0"] = car_preset["RearBrake_0"]
+            current_car["FrontTire_0"] = car_preset["FrontTire_0"]
+            current_car["RearTire_0"] = car_preset["RearTire_0"]
+            current_car["FrontWheelInfo_0"] = car_preset["FrontWheelInfo_0"]
+            current_car["RearWheelInfo_0"] = car_preset["RearWheelInfo_0"]
+            current_car["DressUpInfo_0"] = car_preset["DressUpInfo_0"]
+            current_car["EngineNameId_0"] = car_preset["EngineNameId_0"]
+            current_car["IsReplacedEngine_0"] = car_preset["IsReplacedEngine_0"]
+            current_car["SettingInfo_0"] = car_preset["SettingInfo_0"]
+        
+        with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
+            json.dump(json_data, file, indent=2)
+        
+        load_json()
+
+    return car_preset
 
 # --- Data Setter ends here  --- #
 # --- Helper data getter/setter here  --- #
