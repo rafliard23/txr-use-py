@@ -37,6 +37,11 @@ class control_section(ctk.CTkFrame):
                                           command=self.button_apply_callback)
         self.button_apply.grid(row=3, column=0,
                                padx=20, pady=(0, 20), sticky="ew")
+        self.button_patch = ctk.CTkButton(self,
+                                          text="Patch...")
+        self.button_patch.grid(row=10, column=0,
+                               padx=20, pady=(0, 30), sticky="sew",
+                               command=self.button_patch_callback)
         
         # Flexible buttons
         self.button_rm_car = ctk.CTkButton(self, text="Remove Car",
@@ -150,6 +155,12 @@ class control_section(ctk.CTkFrame):
             self.open_act_vehicle_list_handler()
             messagebox.showinfo("New Car",
                                 "New car has been aded to your garage!")
+    
+    def button_apply_callback(self) -> None:
+        if self.save_dir:
+            pass
+        else:
+            messagebox.showwarning("Warning!", "Load save file first!")
 
     # ----- Wrapper and Misc methods here ----- #
     # Wrapper for Player Data (tabbed) main task displayer
