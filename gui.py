@@ -361,8 +361,11 @@ class vehicle_list_tab(ctk.CTkScrollableFrame):
             self.last_car_id = 0
             self.last_car_name = "None"
         else:
-            if self.selected_button is not None:
+            try:
                 self.buttons[self.selected_button].configure(fg_color="transparent")
+            except:
+                self.selected_button = None
+                pass
             
             self.buttons[button].configure(fg_color=ctk.ThemeManager.theme["CTkButton"]["fg_color"])  # Change to your desired highlight color
             self.selected_button = button
