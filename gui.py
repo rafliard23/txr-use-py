@@ -43,8 +43,10 @@ class control_section(ctk.CTkFrame):
                                            command=self.button_rm_car_callback)
         self.button_add_car = ctk.CTkButton(self, text="Add Car",
                                             command=self.button_add_car_callback)
-        self.button_export_prst = ctk.CTkButton(self, text="Export Preset")
-        self.button_import_prst = ctk.CTkButton(self, text="Import Preset")
+        self.button_export_prst = ctk.CTkButton(self, text="Export Preset",
+                                                command=self.button_export_prst_callback)
+        self.button_import_prst = ctk.CTkButton(self, text="Import Preset",
+                                                command=self.button_import_prst_callback)
         
         # End of buttons
         
@@ -113,6 +115,19 @@ class control_section(ctk.CTkFrame):
         # Now we refresh player stats
         self.open_act_player_stats_handler()
 
+    def button_export_prst_callback(self) -> None:
+        last_data = self.vehicle_list.get_last_selected_vehicle()
+        ret = utils.io.get_vehicle_preset(last_data)
+        if ret:
+            messagebox.showinfo("Car Preset Exported!", f"#{last_data[0]}-{last_data[1]} Preset has been exported")
+
+    def button_import_prst_callback(self) -> None:
+        last_data = self.vehicle_list.get_last_selected_vehicle()
+        ret = utils.io.set_vehicle_preset(last_data)
+        self.vehicle_upgrades.get_vehicle_upgrades()
+        if ret:
+            messagebox.showinfo("Car Preset Imported!", f"Preset has been applied to #{last_data[0]}-{last_data[1]}")
+
     def button_credits(self) -> None:
         messagebox.showinfo("Credits", f"{utils.constants.MAIN_AUTHOR}")
 
@@ -163,8 +178,8 @@ class control_section(ctk.CTkFrame):
         utils.utils.ToolTip(self.button_apply, "Apply current edit")
         utils.utils.ToolTip(self.button_rm_car, "Remove selected car from garage")
         utils.utils.ToolTip(self.button_add_car, "Add car into garage")
-        utils.utils.ToolTip(self.button_export_prst, "Export car preset as file")
-        utils.utils.ToolTip(self.button_import_prst, "Import car preset file")
+        utils.utils.ToolTip(self.button_export_prst, "Export current selected car preset as file")
+        utils.utils.ToolTip(self.button_import_prst, "Import car preset file to current selected car")
 
     # Method handler for showing last selected
     def show_last_selected(self) -> None:
