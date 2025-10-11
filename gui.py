@@ -3,6 +3,7 @@ from tkinter import messagebox
 import utils.constants
 import utils.io
 import utils.utils
+import utils.patch
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("green")
@@ -38,10 +39,10 @@ class control_section(ctk.CTkFrame):
         self.button_apply.grid(row=3, column=0,
                                padx=20, pady=(0, 20), sticky="ew")
         self.button_patch = ctk.CTkButton(self,
-                                          text="Patch...")
+                                          text="Patch...",
+                                          command=self.button_patch_callback)
         self.button_patch.grid(row=10, column=0,
-                               padx=20, pady=(0, 30), sticky="sew",
-                               command=self.button_patch_callback)
+                               padx=20, pady=(0, 30), sticky="sew")
         
         # Flexible buttons
         self.button_rm_car = ctk.CTkButton(self, text="Remove Car",
@@ -156,9 +157,25 @@ class control_section(ctk.CTkFrame):
             messagebox.showinfo("New Car",
                                 "New car has been aded to your garage!")
     
-    def button_apply_callback(self) -> None:
+    def button_patch_callback(self) -> None:
         if self.save_dir:
-            pass
+            utils.patch.load_json_patches()
+            # patch_data = utils.patch.get_save_patch_status()
+
+            checkboxes = utils.utils.CheckboxDialog(
+                self,
+                title="Select Patches...",
+                description="Select appropriate patches for your save game:",
+                options=utils.patch_constants.PATCH_DESC,
+                width=480,
+                height=360,
+            )
+
+            user_patch_req = checkboxes.result
+            if user_patch_req:
+                # utils.patch.set_patch_value_int(user_patch_req)
+                utils.patch.patch_handler(user_patch_req, utils.patch.PATCH_FUNCS)
+            utils.io.load_json()
         else:
             messagebox.showwarning("Warning!", "Load save file first!")
 
