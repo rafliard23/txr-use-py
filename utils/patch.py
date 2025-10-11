@@ -117,7 +117,9 @@ def set_patch_vinyls_emblem_auras() -> bool:
         with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
             json.dump(json_data_patches, file, indent=2)
 
-def set_wanderer_fix() -> bool:
+    return write
+
+def set_patch_wanderer_fix() -> bool:
     global json_data_patches
     write = False
 
@@ -127,6 +129,7 @@ def set_wanderer_fix() -> bool:
         .get("user_info_0", {})
         .get("Struct", {})
         .get("Struct", {})
+        .get("RivalSituations", {})
     )
 
     betelguese_data = next((wanderer for wanderer in wanderers_data if wanderer["key"]["Name"] == "Rival_0027"), None)
@@ -168,6 +171,8 @@ def set_wanderer_fix() -> bool:
     if write:
         with open(constants.TMP_PATH, "w", encoding="utf-8") as file:
             json.dump(json_data_patches, file, indent=2)
+    
+    return write
 
 def set_patch_value_int(patch_query: list) -> None:
     global json_data_patches
@@ -227,4 +232,5 @@ def get_save_patch_status() -> list:
 # /------- End of Getter -------/
 PATCH_FUNCS = [set_patch_dealer_cars,
                set_patch_vinyls_emblem_auras,
-               set_patch_engine_swap_aura]
+               set_patch_engine_swap_aura,
+               set_patch_wanderer_fix]
