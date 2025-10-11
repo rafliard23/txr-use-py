@@ -2,7 +2,9 @@ VERSION = "1.2.0"
 MAIN_AUTHOR = "Credits: \n\
 trumank⠀\t - uesave-cli \n\
 TomSchimansky \t - CustomTkinter \n\
-rafli.ard23 \t - App creator"
+rafli.ard23 \t - App creator \n\n\
+Modding server and everyone that contribute in this project!"
+
 
 TMP_PATH = "./bin/tmp/tmp.json"
 
@@ -78,13 +80,6 @@ PLJ_SUM_MILE = {"TotalMileages_0":{"tag":{"data":{"Other":"DoubleProperty"}},"Do
 PLJ_SUM_CP = {"CumulativeAcquisitionCP_0":{"tag":{"data":{"Other":"Int64Property"}},"Int64":0}}
 
 PLJ_DAY = {"Day_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0}}
-
-# JSON Player Perk Template
-
-PLPJ_AURA = {"key":{"Enum":"ESkillTreeType::STT_AURA"},"value":{"Struct":{"Struct":{"Level_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0},"CategoryName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"PerkOncome"},"RowName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"Perk_enable_aura"}}}}}
-
-PLPJ_EG_SWAP = {"key":{"Enum":"ESkillTreeType::STT_ENABLE_ENGINE_REPLACEMENT"},"value":{"Struct":{"Struct":{"Level_0":{"tag":{"data":{"Other":"IntProperty"}},"Int":0},"CategoryName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"PerkOncome"},"RowName_0":{"tag":{"data":{"Other":"NameProperty"}},"Name":"Perk_enable_engine_replacement"}}}}}
-
 
 # JSON Car Template
 
