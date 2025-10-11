@@ -353,7 +353,9 @@ def set_vehicle_upgrade(data: list[str | int], id: int) -> None:
         # Engine Swap
         if (data[1]):
             processed.append(data[1])
-
+        else:
+            processed.append('')
+            
         # We check whether it is empty or not
         if (data[2]):
             processed.append(data[2])   # Add Aura
